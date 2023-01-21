@@ -15,19 +15,33 @@ on:
     branches: [ "Dev" ]
 
 jobs:
-  setup-db:
+  postgres:
     runs-on: ubuntu-latest
+    container: node:latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: ecom_app_db
+          POSTGRES_PASSWORD: root
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
-    - name: Start PostgreSQL
-      uses: dockette/action-postgres@v1
-      with:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: root
-        POSTGRES_DB: ecom_app_db
-    - name: Wait for PostgreSQL
-      run: sleep 10
-    - name: Run database migration
-      run: mvn flyway:migrate
+      - name: Install PostgreSQL client
+        run: |
+          apt-get update
+          apt-get install --yes postgresql-client
+      - name: Query database
+        run: psql -h postgres -d ecom_app_db -U postgres -c 'SELECT 1;'
+        env:
+          PGPASSWORD: root
   build:
 
     runs-on: ubuntu-latest
