@@ -19,5 +19,30 @@
 *.tar.gz
 *.rar
 
+# Temporary file
+*.tmp
+
+# Spring boot build files
+target/
+
+# Gradle build files
+build/
+
+# IntelliJ IDEA files
+.idea/
+
+# Eclipse files
+.settings/
+
+# Maven build files
+target/
+
+.classpath
+.factorypath
+.project
+HELP.md
+mvnw
+mvnw.cmd
+maven-wrapper.properties
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
