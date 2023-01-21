@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/create-data-roles.sql
+  - include:
+      file: db/changelog/insert-data-roles.sql
+  - include:
+      file: db/changelog/create-data-users.sql
+  - include:
+      file: db/changelog/create-data-user_roles.sql
