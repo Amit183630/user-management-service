@@ -37,7 +37,7 @@ jobs:
     
     - name: Create additional schema
       run: |
-        sudo -u postgres psql --command="CREATE SCHEMA users_data" --command="grant all privileges on schema users_data to postgres" --command="\dn"
+        sudo -u postgres psql --command="CREATE SCHEMA users_data" --command="grant all privileges on schema users_data to postgres" --command="SET schema 'user_data'" --command="\dn"
         
     - uses: actions/checkout@v3
     - name: Set up JDK 17
