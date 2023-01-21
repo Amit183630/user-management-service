@@ -35,9 +35,9 @@ jobs:
         sudo -u postgres createdb ecom_app_db --owner=ecom_app_db 
         PGPASSWORD=root
     
-    - name: Create additional user
+    - name: Create additional schema
       run: |
-        sudo -u postgres psql --command="CREATE SCHEMA users_data" --command="\du"
+        sudo -u postgres psql --command="CREATE SCHEMA users_data" --command="\dn"
         
     - uses: actions/checkout@v3
     - name: Set up JDK 17
