@@ -13,9 +13,9 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:postgresql://localhost:5432/ecom_app_db
-    username: ecom_app_db
-    password: root
+    url: jdbc:postgresql://postgresql-106852-0.cloudclusters.net:10229/ecom_app_db
+    username: ongraphjava
+    password: Amit@1234
     driverClassName: org.postgresql.Driver
     
     type: com.zaxxer.hikari.HikariDataSource 

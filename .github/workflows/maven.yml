@@ -20,25 +20,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    
-    - name: Start PostgreSQL on Ubuntu
-      run: |
-        sudo systemctl start postgresql.service
-        pg_isready
-    
-    - name: Create additional user
-      run: |
-        sudo -u postgres psql --command="CREATE USER ecom_app_db PASSWORD 'root'" --command="\du"
-    
-    - name: Create additional database
-      run: |
-        sudo -u postgres createdb ecom_app_db --owner=ecom_app_db 
-        PGPASSWORD=root
-    
-    - name: Create additional schema
-      run: |
-        sudo -u postgres psql --command="\c ecom_app_db" --command="CREATE SCHEMA users_data" --command="grant all privileges on schema users_data to ecom_app_db" --command="SET schema 'users_data'" --command="\dn"
-        
     - uses: actions/checkout@v3
     - name: Set up JDK 17
       uses: actions/setup-java@v3
