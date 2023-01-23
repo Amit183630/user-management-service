@@ -11,7 +11,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
   datasource:
     url: jdbc:postgresql://postgresql-106852-0.cloudclusters.net:10229/ecom_app_db
     username: ongraphjava
@@ -33,3 +33,9 @@ spring:
         cacheServerConfiguration: true
         elideSetAutoCommits: true
         maintainTimeStats: false
+
+ongraph:
+  authentication:
+    secretKey: ongraphSecretKey
+    tokentExpTimeInMs: 86400000
+  
