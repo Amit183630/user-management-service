@@ -1,9 +1,19 @@
 databaseChangeLog:
   - include:
+      author: Amit Gupta
       file: db/changelog/create-data-roles.sql
   - include:
+      author: Amit Gupta
       file: db/changelog/insert-data-roles.sql
   - include:
+      author: Amit Gupta
       file: db/changelog/create-data-users.sql
   - include:
+      author: Amit Gupta
       file: db/changelog/create-data-user_roles.sql
+  - include:
+      author: Amit Gupta
+      file: db/changelog/modify-roles.sql
+  - include:
+      author: Amit Gupta
+      file: db/changelog/modify-users.sql
