@@ -8,8 +8,8 @@ import lombok.Getter;
 public class CustomException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
-	private final ErrorCodes errorCode;
-	private final String message;
+	private ErrorCodes errorCode;
+	private String message;
 	
 	public CustomException(ErrorCodes errorCode) {
 		super(errorCode.getMsg());

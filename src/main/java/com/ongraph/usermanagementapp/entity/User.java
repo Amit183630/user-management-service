@@ -4,8 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import com.ongraph.usermanagementapp.dto.SignupRequest;
+
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -15,20 +16,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users")
 @Data
-@EqualsAndHashCode(callSuper =false)
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class User extends Audit {
+public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
@@ -46,18 +39,25 @@ public class User extends Audit {
 	
 	private String phoneNo;
 	
-	private boolean enabled;
-	
-	@Column(length = 200)
-	private String confirmationToken;
-	
 	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinTable(name = "user_roles",
 			joinColumns = @JoinColumn(referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(referencedColumnName = "id"))
-	@Builder.Default
 	private Set<Role> roles=new HashSet<>();
 	
+	public User(SignupRequest signupRequest) {
+		this.firstName=signupRequest.getFirstName();
+		this.lastName=signupRequest.getLastName();
+		this.userName=signupRequest.getUserName();
+		this.email=signupRequest.getEmail();
+		this.password=signupRequest.getPassword();
+		this.phoneNo=signupRequest.getPhoneNo();
+
+		Role role=new Role();
+		role.setRole(signupRequest.getRole());
+		
+		this.roles.add(role);
+	}
 	
 	
 }
