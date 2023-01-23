@@ -24,7 +24,7 @@ public class Role {
 	private UUID id;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(length = 20)
-	private UserRoles role;
+	@Column(length = 20,name = "name",unique = true)
+	private UserRoles userRole;
 	
 }
