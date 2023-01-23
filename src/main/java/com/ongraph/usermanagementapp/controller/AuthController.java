@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ongraph.usermanagementapp.dto.LoginRequest;
 import com.ongraph.usermanagementapp.dto.SignupRequest;
 import com.ongraph.usermanagementapp.model.DataResponse;
 import com.ongraph.usermanagementapp.service.UserService;
@@ -30,15 +29,4 @@ public class AuthController {
 						)
 				);
 	}
-	
-	@PostMapping("/signin")
-	public ResponseEntity<DataResponse> signin(@Valid @RequestBody LoginRequest loginRequest) {
-
-		return ResponseEntity.ok(
-				new DataResponse(true,
-						userService.loginUser(loginRequest)
-						)
-				);
-	}
-	
 }
