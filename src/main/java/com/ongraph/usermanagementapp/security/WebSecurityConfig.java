@@ -18,18 +18,24 @@ import com.ongraph.usermanagementapp.security.filter.AuthEntryPoint;
 import com.ongraph.usermanagementapp.security.filter.AuthTokenFilter;
 import com.ongraph.usermanagementapp.security.impl.UserDetailsServiceImpl;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Configuration
 @EnableMethodSecurity
+@Slf4j
 public class WebSecurityConfig {
 
 	@Autowired
 	private UserDetailsServiceImpl userDetailsService;
 	
+	private String[] unsecuredPaths={"/auth/**"};
+			
+
+	
 	@Bean
 	public AuthTokenFilter authenticationJwtTokenFilter() {
 		return new AuthTokenFilter();
 	}
-	
 	@Bean
 	public DaoAuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider authProvider=new DaoAuthenticationProvider();
@@ -59,5 +65,7 @@ public class WebSecurityConfig {
 		http.authenticationProvider(authenticationProvider());
 		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 		return http.build();
+		
 	}
+
 }

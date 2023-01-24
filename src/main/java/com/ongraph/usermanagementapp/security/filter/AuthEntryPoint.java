@@ -2,8 +2,9 @@ package com.ongraph.usermanagementapp.security.filter;
 
 import java.io.IOException;
 
+import javax.naming.AuthenticationException;
+
 import org.springframework.http.MediaType;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
@@ -19,19 +20,22 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
-public class AuthEntryPoint implements AuthenticationEntryPoint{
+public class AuthEntryPoint implements AuthenticationEntryPoint {
+
 
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
-			AuthenticationException authException) throws IOException, ServletException {
-		log.error("Unauthorized error: {}", authException.getMessage());
-		
+			org.springframework.security.core.AuthenticationException authException)
+			throws IOException, ServletException {
+		log.error("Unauthorized error: {}", authException);
+
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-		
-		DataResponse dataResponse=new DataResponse(new ErrorDetails(ErrorCodes.E_AUTH401.name(), authException.getMessage()));
-		final ObjectMapper mapper=new ObjectMapper();
+
+		DataResponse dataResponse = new DataResponse(
+				new ErrorDetails(ErrorCodes.E_AUTH401.name(), authException.getMessage()));
+		final ObjectMapper mapper = new ObjectMapper();
 		mapper.writeValue(response.getOutputStream(), dataResponse);
-		
+
 	}
 }
