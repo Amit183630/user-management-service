@@ -1,7 +1,5 @@
 package com.ongraph.usermanagementapp.security.filter;
 
-import java.net.URI;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,27 +32,26 @@ public class RestInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		
-		if(!checkIfUnsecRequest(request)) {
-			var token=parseJwt(request);
-			if(token!=null && jwtUtil.validateJwtToken(token)) {
-				var username=jwtUtil.getUserNameFromJwtToken(token);
-				
-				var userDetails=userDetailsService.loadUserByUsername(username);
-				
-				var authentication=new UsernamePasswordAuthenticationToken(
-						userDetails, null,userDetails.getAuthorities());
-				
-				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-				
-				SecurityContextHolder.getContext().setAuthentication(authentication);
-				return true;
-				
-			}else {
-				throw new CustomException(ErrorCodes.E_AUTH401);
-			}
-		}else {
-			return true;
-		}
+//		if(!checkIfUnsecRequest(request)) {
+//			var token=parseJwt(request);
+//			if(token!=null && jwtUtil.validateJwtToken(token)) {
+//				var username=jwtUtil.getUserNameFromJwtToken(token);
+//				
+//				var userDetails=userDetailsService.loadUserByUsername(username);
+//				
+//				var authentication=new UsernamePasswordAuthenticationToken(
+//						userDetails, null,userDetails.getAuthorities());
+//				
+//				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//				
+//				SecurityContextHolder.getContext().setAuthentication(authentication);
+//				return true;
+//				
+//			}else {
+//				throw new CustomException(ErrorCodes.E_AUTH401);
+//			}
+//		}
+		return true;
 	}
 	
 	private boolean checkIfUnsecRequest(HttpServletRequest request) {

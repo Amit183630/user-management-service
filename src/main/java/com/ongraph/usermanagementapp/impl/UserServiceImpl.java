@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
 			
 			return User.builder()
 					.email(request.getEmail())
-					.enabled(false)
+					.enabled(true)
 					.firstName(request.getFirstName())
 					.lastName(request.getLastName())
 					.password(encoder.encode(request.getPassword()))

@@ -2,8 +2,6 @@ package com.ongraph.usermanagementapp.security.filter;
 
 import java.io.IOException;
 
-import javax.naming.AuthenticationException;
-
 import org.springframework.http.MediaType;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
