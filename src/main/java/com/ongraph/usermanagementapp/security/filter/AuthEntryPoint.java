@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ongraph.usermanagementapp.model.DataResponse;
 import com.ongraph.usermanagementapp.model.ErrorCodes;
 import com.ongraph.usermanagementapp.model.ErrorDetails;
+import com.ongraph.usermanagementapp.util.LoggerHelper;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +26,7 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			org.springframework.security.core.AuthenticationException authException)
 			throws IOException, ServletException {
-		log.error("Unauthorized error: {}", authException);
+		log.error("Unauthorized error: {}", LoggerHelper.printStackTrace(authException));
 
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

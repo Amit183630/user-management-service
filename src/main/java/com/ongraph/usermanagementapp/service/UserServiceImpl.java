@@ -1,4 +1,4 @@
-package com.ongraph.usermanagementapp.impl;
+package com.ongraph.usermanagementapp.service;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -24,7 +24,6 @@ import com.ongraph.usermanagementapp.repository.RoleRepository;
 import com.ongraph.usermanagementapp.repository.UserRepository;
 import com.ongraph.usermanagementapp.security.model.UserDetailsImpl;
 import com.ongraph.usermanagementapp.security.util.JwtUtil;
-import com.ongraph.usermanagementapp.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,6 +49,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public UserDetailsImpl addUser(SignupRequest signupRequest) {
+		log.debug("addUser()-> signupRequest:{}",signupRequest);
 		validateSignupRequest(signupRequest);
 		return UserDetailsImpl.build(
 				userRepository.save(populateUser(signupRequest)));
@@ -57,6 +57,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public JwtData loginUser(LoginRequest loginRequest) {
+		log.debug("loginUser()-> loginRequest:{}",loginRequest);
 		Authentication authentication=authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 		var token=jwtUtil.generateToken(authentication);
@@ -66,7 +67,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	private void validateSignupRequest(SignupRequest signupRequest) {
-		
+		log.debug("validateSignupRequest()-> signupRequest:{}",signupRequest);
 		if(signupRequest!=null) {
 
 			if(userRepository.existsByUserName(signupRequest.getUserName())) {
@@ -80,6 +81,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	private User populateUser(SignupRequest request) {
+		log.debug("populateUser()-> signupRequest:{}",request);
 
 		Optional<Role> optional=roleRepository.findByUserRole(request.getRole());
 		if(optional.isPresent()) {

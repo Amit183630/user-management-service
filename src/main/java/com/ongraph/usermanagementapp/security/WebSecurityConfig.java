@@ -2,7 +2,6 @@ package com.ongraph.usermanagementapp.security;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,7 +12,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import com.ongraph.usermanagementapp.security.filter.AuthEntryPoint;
@@ -23,9 +21,6 @@ import com.ongraph.usermanagementapp.security.impl.UserDetailsServiceImpl;
 @Configuration
 @EnableMethodSecurity
 public class WebSecurityConfig {
-
-	@Autowired
-	private UserDetailsServiceImpl userDetailsService;
 	
 	private String[] unsecuredPaths={"/auth/**"};
 			
@@ -36,7 +31,7 @@ public class WebSecurityConfig {
 	}
 	
 	@Bean
-	public DaoAuthenticationProvider authenticationProvider() {
+	public DaoAuthenticationProvider authenticationProvider(UserDetailsServiceImpl userDetailsService) {
 		DaoAuthenticationProvider authProvider=new DaoAuthenticationProvider();
 		authProvider.setUserDetailsService(userDetailsService);
 		authProvider.setPasswordEncoder(passwordEncoder());
@@ -54,14 +49,15 @@ public class WebSecurityConfig {
 	}
 	
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http,AuthEntryPoint unauthorizedHandler) throws Exception {
+	public SecurityFilterChain filterChain(HttpSecurity http,AuthEntryPoint unauthorizedHandler,
+			UserDetailsServiceImpl userDetailsService) throws Exception {
 		
 		http.csrf().disable()
 		.authorizeHttpRequests(authorizeHttpRequest->
 			authorizeHttpRequest.requestMatchers(this.unsecuredPaths).permitAll()
 			.anyRequest().authenticated()
 		)
-		.authenticationProvider(authenticationProvider())
+		.authenticationProvider(authenticationProvider(userDetailsService))
 		.addFilterBefore(authenticationJwtTokenFilter(), BasicAuthenticationFilter.class)
 		.httpBasic(withDefaults())
 		.exceptionHandling().authenticationEntryPoint(unauthorizedHandler);

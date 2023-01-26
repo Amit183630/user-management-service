@@ -21,6 +21,7 @@ public class ExceptionHandleController {
 	@ExceptionHandler({CustomException.class})
 	@ResponseStatus(HttpStatus.ALREADY_REPORTED)
 	public ResponseEntity<DataResponse> handleCustomException(CustomException customException){
+		log.debug("handleCustomException()->customException:{}",customException);
 		log.error("handleCustomException()->\nexception:{}",LoggerHelper.printStackTrace(customException));
 		return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(
 				new DataResponse(
@@ -31,6 +32,8 @@ public class ExceptionHandleController {
 	@ExceptionHandler({Exception.class})
 	@ResponseStatus(HttpStatus.ALREADY_REPORTED)
 	public ResponseEntity<DataResponse> handleGlobalException(Exception exception){
+		log.debug("handleGlobalException()->exception:{}",exception);
+		
 		log.error("handleGlobalException()->\nexception:{}",LoggerHelper.printStackTrace(exception,20));
 		return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(
 				new DataResponse(

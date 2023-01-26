@@ -3,8 +3,10 @@ package com.ongraph.usermanagementapp.exception;
 import com.ongraph.usermanagementapp.model.ErrorCodes;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class CustomException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

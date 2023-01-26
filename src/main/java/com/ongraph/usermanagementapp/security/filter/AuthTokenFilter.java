@@ -16,7 +16,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class AuthTokenFilter extends OncePerRequestFilter {
 
 	@Autowired
@@ -28,6 +30,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
+		log.debug("AuthTokenFilter.doFilterInternal()");
 		var token = parseJwt(request);
 		if (token != null && jwtUtil.validateJwtToken(token)) {
 			var username = jwtUtil.getUserNameFromJwtToken(token);
@@ -42,6 +45,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		}
+
 		filterChain.doFilter(request, response);
 
 	}
