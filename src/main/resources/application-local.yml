@@ -5,13 +5,15 @@ server:
 spring:
   application:
     name: user-management-service
+  kafka:
+    bootstrap-servers: localhost:9093
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
-    enabled: true
+    enabled: false
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
   datasource:
     url: jdbc:postgresql://localhost:5432/ecom_app_db
     username: postgres
@@ -33,13 +35,16 @@ spring:
         cacheServerConfiguration: true
         elideSetAutoCommits: true
         maintainTimeStats: false
-
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
 logging:
   file:
     name: logs/application-%d{yyyy-MM-dd}.log
   level:
-    '[com.ongraph.usermanagementapp]': debug
-    '[org.springframework.web]': debug
+    '[com.ongraph.usermanagementapp]': info
+    '[org.springframework.web]': info
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss}- %msg%n"
         
@@ -47,3 +52,8 @@ ongraph:
   authentication:
     secretKey: ongraphSecretKey
     tokentExpTimeInMs: 86400000
+  kafka:
+    topics:
+      registrationEmail: registrationemail
+      loginHistory: loginhistory
+    emit: true

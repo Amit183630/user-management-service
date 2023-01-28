@@ -22,7 +22,7 @@ public class ExceptionHandleController {
 	@ResponseStatus(HttpStatus.ALREADY_REPORTED)
 	public ResponseEntity<DataResponse> handleCustomException(CustomException customException){
 		log.debug("handleCustomException()->customException:{}",customException);
-		log.error("handleCustomException()->\nexception:{}",LoggerHelper.printStackTrace(customException));
+		log.error("handleCustomException()->\nexception:{}",LoggerHelper.printStackTrace(customException,5));
 		return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(
 				new DataResponse(
 						new ErrorDetails(customException.getErrorCode().name(), customException.getMessage()))

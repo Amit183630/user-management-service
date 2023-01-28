@@ -1,6 +1,7 @@
 package com.ongraph.usermanagementapp.security.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	
 	@Override
 	@Transactional
+	@Cacheable(value = "user_details")
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		

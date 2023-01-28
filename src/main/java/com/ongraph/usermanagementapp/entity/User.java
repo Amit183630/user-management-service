@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,6 +59,10 @@ public class User extends Audit {
 	@Builder.Default
 	private Set<Role> roles=new HashSet<>();
 	
+	@OneToMany(mappedBy = "user")
+	@Builder.Default
+	private Set<UserLoginHistory>loginHistories=new HashSet<>();
 	
 	
+
 }
