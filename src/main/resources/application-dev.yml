@@ -3,21 +3,25 @@ server:
     context-path: /user-management/v1
   port: 8080
 spring:
-  application:
-    name: user-management-service
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
   kafka:
     bootstrap-servers: localhost:9093
+  application:
+    name: user-management-service
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
-    enabled: true
+    enabled: false
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
   datasource:
-    url: jdbc:postgresql://postgresql-106852-0.cloudclusters.net:10229/ecom_app_db
-    username: ongraphjava
-    password: Amit@1234
+    url: jdbc:postgresql://localhost:5432/ecom_app_db
+    username: postgres
+    password: 1234
     driverClassName: org.postgresql.Driver
     
     type: com.zaxxer.hikari.HikariDataSource 
@@ -35,14 +39,9 @@ spring:
         cacheServerConfiguration: true
         elideSetAutoCommits: true
         maintainTimeStats: false
-  data:
-    redis:
-      host: 127.0.0.1
-      port: 6379
-
 logging:
   file:
-    name: "logs/application-%d{yyyy-MM-dd}.log"
+    name: logs/application-%d{yyyy-MM-dd}.log
   level:
     '[com.ongraph.usermanagementapp]': info
     '[org.springframework.web]': info
@@ -52,7 +51,7 @@ logging:
 ongraph:
   authentication:
     secretKey: ongraphSecretKey
-    tokentExpTimeInMs: 86400000
+    tokenExpTimeInMs: 86400000
   kafka:
     topics:
       registrationEmail: registrationemail

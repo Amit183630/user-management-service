@@ -17,6 +17,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.ongraph.commonserviceapp.cache.UserCacheRepository;
+import com.ongraph.commonserviceapp.model.ErrorCodes;
+import com.ongraph.commonserviceapp.model.UserDetails;
+import com.ongraph.commonserviceapp.model.UserDetailsImpl;
+import com.ongraph.commonserviceapp.util.JwtUtil;
+import com.ongraph.usermanagementapp.context.UserDetailsContextHolder;
 import com.ongraph.usermanagementapp.dto.AddLoginHistoryDTO;
 import com.ongraph.usermanagementapp.dto.JwtData;
 import com.ongraph.usermanagementapp.dto.LoginRequest;
@@ -24,18 +30,16 @@ import com.ongraph.usermanagementapp.dto.SignupRequest;
 import com.ongraph.usermanagementapp.entity.Role;
 import com.ongraph.usermanagementapp.entity.User;
 import com.ongraph.usermanagementapp.exception.CustomException;
-import com.ongraph.usermanagementapp.model.ErrorCodes;
-import com.ongraph.usermanagementapp.model.UserDetails;
 import com.ongraph.usermanagementapp.repository.RoleRepository;
 import com.ongraph.usermanagementapp.repository.UserRepository;
-import com.ongraph.usermanagementapp.security.model.UserDetailsImpl;
-import com.ongraph.usermanagementapp.security.util.JwtUtil;
 import com.ongraph.usermanagementapp.service.UserLoginHistoryService;
 import com.ongraph.usermanagementapp.service.UserService;
+import com.ongraph.usermanagementapp.transformer.ModelTransformer;
 import com.ongraph.usermanagementapp.util.Common;
 import com.ongraph.usermanagementapp.util.Time;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -48,12 +52,15 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	RoleRepository roleRepository;
-	
+
 	@Autowired
-	AuthenticationManager authenticationManager;
+	UserCacheRepository userCacheRepository;
 	
 	@Autowired
 	PasswordEncoder encoder;
+	
+	@Autowired
+	AuthenticationManager authenticationManager;
 	
 	@Autowired
 	JwtUtil jwtUtil;
@@ -67,11 +74,13 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserLoginHistoryService loginHistoryService;
 	
+	
 	@Override
-	public UserDetailsImpl addUser(SignupRequest signupRequest) {
+	@Transactional
+	public UserDetails addUser(SignupRequest signupRequest) {
 		log.debug("addUser()-> signupRequest:{}",signupRequest);
 		validateSignupRequest(signupRequest);
-		return UserDetailsImpl.build(
+		return ModelTransformer.convertToUserDetails(
 				userRepository.save(populateUser(signupRequest)));
 	}
 	
@@ -84,8 +93,9 @@ public class UserServiceImpl implements UserService {
 					new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 			var token=jwtUtil.generateToken(authentication);
 			addLoginHistory(true, loginRequest.getUsername());
-			var userDetails=(UserDetailsImpl)authentication.getPrincipal();
-			return new JwtData(userDetails,token);
+			var userDetailsImpl=(UserDetailsImpl)authentication.getPrincipal();
+			setLogginUserDetailsInCache();
+			return new JwtData(userDetailsImpl,token);
 		}catch(BadCredentialsException e) {
 			addLoginHistory(false, loginRequest.getUsername());
 			throw new CustomException(ErrorCodes.E_AUTH401, "Invalid password");
@@ -104,17 +114,7 @@ public class UserServiceImpl implements UserService {
 	public UserDetails getUserDetails(String userName) {
 		log.debug("getUserDetails()->userName:{}",userName);
 		User user= userRepository.findByUserName(userName).orElseThrow(()->new CustomException(ErrorCodes.E_NOTFOUND404, "User not found with username:"+userName));
-		return UserDetails.builder()
-				.email(user.getEmail())
-				.enabled(user.isEnabled())
-				.firstName(user.getFirstName())
-				.lastName(user.getLastName())
-				.id(user.getId())
-				.loginHistories(user.getLoginHistories())
-				.phoneNo(user.getPhoneNo())
-				.roles(user.getRoles())
-				.userName(user.getUserName())
-				.build();
+		return ModelTransformer.convertToUserDetails(user);
 	}
 	
 	private void validateSignupRequest(SignupRequest signupRequest) {
@@ -170,6 +170,11 @@ public class UserServiceImpl implements UserService {
 		}else {
 			loginHistoryService.addLoginHistory(loginHistoryDTO);
 		}
+	}
+	
+	private void setLogginUserDetailsInCache() {
+		var userDetails=UserDetailsContextHolder.getContext();
+		userCacheRepository.saveOrUpdate(userDetails);
 	}
 	
 	

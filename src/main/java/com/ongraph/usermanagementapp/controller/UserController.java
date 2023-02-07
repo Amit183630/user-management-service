@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ongraph.usermanagementapp.model.DataResponse;
+import com.ongraph.commonserviceapp.model.DataResponse;
 import com.ongraph.usermanagementapp.service.UserService;
 
 @RestController

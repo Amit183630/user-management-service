@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import com.ongraph.commonserviceapp.model.ErrorCodes;
 import com.ongraph.usermanagementapp.dto.AddLoginHistoryDTO;
 import com.ongraph.usermanagementapp.entity.UserLoginHistory;
 import com.ongraph.usermanagementapp.exception.CustomException;
-import com.ongraph.usermanagementapp.model.ErrorCodes;
 import com.ongraph.usermanagementapp.repository.UserLoginHistoryRepository;
 import com.ongraph.usermanagementapp.repository.UserRepository;
 import com.ongraph.usermanagementapp.service.UserLoginHistoryService;

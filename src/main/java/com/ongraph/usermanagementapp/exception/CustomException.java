@@ -1,6 +1,6 @@
 package com.ongraph.usermanagementapp.exception;
 
-import com.ongraph.usermanagementapp.model.ErrorCodes;
+import com.ongraph.commonserviceapp.model.ErrorCodes;
 
 import lombok.Getter;
 import lombok.ToString;

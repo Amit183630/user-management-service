@@ -3,7 +3,7 @@ package com.ongraph.usermanagementapp.entity;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ongraph.usermanagementapp.model.UserRoles;
+import com.ongraph.commonserviceapp.model.UserRoles;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -3,10 +3,14 @@ server:
     context-path: /user-management/v1
   port: 9701
 spring:
-  application:
-    name: user-management-service
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
   kafka:
     bootstrap-servers: localhost:9093
+  application:
+    name: user-management-service
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: false
@@ -35,10 +39,6 @@ spring:
         cacheServerConfiguration: true
         elideSetAutoCommits: true
         maintainTimeStats: false
-  data:
-    redis:
-      host: 127.0.0.1
-      port: 6379
 logging:
   file:
     name: logs/application-%d{yyyy-MM-dd}.log
@@ -51,7 +51,7 @@ logging:
 ongraph:
   authentication:
     secretKey: ongraphSecretKey
-    tokentExpTimeInMs: 86400000
+    tokenExpTimeInMs: 86400000
   kafka:
     topics:
       registrationEmail: registrationemail

@@ -1,16 +1,15 @@
 package com.ongraph.usermanagementapp.security.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.ongraph.usermanagementapp.exception.CustomException;
-import com.ongraph.usermanagementapp.model.ErrorCodes;
+import com.ongraph.commonserviceapp.model.UserDetailsImpl;
+import com.ongraph.usermanagementapp.context.UserDetailsContextHolder;
 import com.ongraph.usermanagementapp.repository.UserRepository;
-import com.ongraph.usermanagementapp.security.model.UserDetailsImpl;
+import com.ongraph.usermanagementapp.transformer.ModelTransformer;
 
 import jakarta.transaction.Transactional;
 
@@ -22,11 +21,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	
 	@Override
 	@Transactional
-	@Cacheable(value = "user_details")
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		
-		
-		var user=userRepository.findByUserName(username).orElseThrow(()->new CustomException(ErrorCodes.E_NOTFOUND404, "User not found with username:"+username));
-		return UserDetailsImpl.build(user);
+
+		var user=userRepository.findByUserName(username).orElseThrow(()->new UsernameNotFoundException("User not found with username:"+username));
+		var userDetails=ModelTransformer.convertToUserDetails(user);
+		UserDetailsContextHolder.set(userDetails);
+		return UserDetailsImpl.build(userDetails);
 	}
 }

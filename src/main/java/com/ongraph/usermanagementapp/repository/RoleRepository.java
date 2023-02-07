@@ -5,8 +5,8 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.ongraph.commonserviceapp.model.UserRoles;
 import com.ongraph.usermanagementapp.entity.Role;
-import com.ongraph.usermanagementapp.model.UserRoles;
 
 public interface RoleRepository extends JpaRepository<Role, UUID>{
 

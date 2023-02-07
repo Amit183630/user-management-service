@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import com.ongraph.usermanagementapp.security.model.UserDetailsImpl;
+import com.ongraph.commonserviceapp.model.UserDetailsImpl;
 
 import lombok.Data;
 

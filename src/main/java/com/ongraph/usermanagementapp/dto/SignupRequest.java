@@ -1,6 +1,6 @@
 package com.ongraph.usermanagementapp.dto;
 
-import com.ongraph.usermanagementapp.model.UserRoles;
+import com.ongraph.commonserviceapp.model.UserRoles;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
