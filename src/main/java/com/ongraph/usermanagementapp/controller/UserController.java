@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ongraph.commonserviceapp.context.UserDetailsContextHolder;
 import com.ongraph.commonserviceapp.model.DataResponse;
 import com.ongraph.usermanagementapp.service.UserService;
 
@@ -23,6 +24,15 @@ public class UserController {
     	
         return ResponseEntity.ok(
         		new DataResponse(true, service.getUserDetails(userName)
+        				));
+    }
+    
+    @GetMapping("/myDetails")
+    public ResponseEntity<DataResponse> myDetails() {
+    	
+    	
+        return ResponseEntity.ok(
+        		new DataResponse(true, UserDetailsContextHolder.getContext()
         				));
     }
     

@@ -18,11 +18,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ongraph.commonserviceapp.cache.UserCacheRepository;
+import com.ongraph.commonserviceapp.context.UserDetailsContextHolder;
 import com.ongraph.commonserviceapp.model.ErrorCodes;
 import com.ongraph.commonserviceapp.model.UserDetails;
 import com.ongraph.commonserviceapp.model.UserDetailsImpl;
 import com.ongraph.commonserviceapp.util.JwtUtil;
-import com.ongraph.usermanagementapp.context.UserDetailsContextHolder;
 import com.ongraph.usermanagementapp.dto.AddLoginHistoryDTO;
 import com.ongraph.usermanagementapp.dto.JwtData;
 import com.ongraph.usermanagementapp.dto.LoginRequest;

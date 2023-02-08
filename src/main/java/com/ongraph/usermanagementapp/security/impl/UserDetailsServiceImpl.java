@@ -6,8 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.ongraph.commonserviceapp.context.UserDetailsContextHolder;
 import com.ongraph.commonserviceapp.model.UserDetailsImpl;
-import com.ongraph.usermanagementapp.context.UserDetailsContextHolder;
 import com.ongraph.usermanagementapp.repository.UserRepository;
 import com.ongraph.usermanagementapp.transformer.ModelTransformer;
 

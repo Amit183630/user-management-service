@@ -5,16 +5,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import com.ongraph.commonserviceapp.cache.UserCacheRepository;
 import com.ongraph.commonserviceapp.model.ErrorCodes;
+import com.ongraph.commonserviceapp.model.UserDetails;
 import com.ongraph.usermanagementapp.dto.AddLoginHistoryDTO;
 import com.ongraph.usermanagementapp.entity.UserLoginHistory;
 import com.ongraph.usermanagementapp.exception.CustomException;
 import com.ongraph.usermanagementapp.repository.UserLoginHistoryRepository;
 import com.ongraph.usermanagementapp.repository.UserRepository;
 import com.ongraph.usermanagementapp.service.UserLoginHistoryService;
+import com.ongraph.usermanagementapp.transformer.ModelTransformer;
 import com.ongraph.usermanagementapp.util.LoggerHelper;
 import com.ongraph.usermanagementapp.util.Time;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -33,6 +37,9 @@ public class UserLoginHistoryImpl implements UserLoginHistoryService {
 	@Autowired
 	UserLoginHistoryRepository loginHistoryRepository;
 	
+	@Autowired
+	UserCacheRepository userCacheRepository;
+	
 	@Override
 	public void emitAddLoginHistoryEvent(AddLoginHistoryDTO addLoginHistoryDTO) {
 		
@@ -49,6 +56,7 @@ public class UserLoginHistoryImpl implements UserLoginHistoryService {
 	}
 
 	@Override
+	@Transactional
 	public UserLoginHistory addLoginHistory(AddLoginHistoryDTO addLoginHistoryDTO) {
 		var user=userRepository.findByUserName(addLoginHistoryDTO.getUsername()).orElseThrow(()->
 			new CustomException(ErrorCodes.E_NOTFOUND404, "user not found with username:"+addLoginHistoryDTO.getUsername()));
@@ -58,7 +66,10 @@ public class UserLoginHistoryImpl implements UserLoginHistoryService {
 		loginHistory.setLoggedIn(addLoginHistoryDTO.isLoggedIn());
 		loginHistory.setLogInAttemptTime(addLoginHistoryDTO.getLoggedInTime());
 		loginHistory.setUser(user);
-		return loginHistoryRepository.save(loginHistory);
+		loginHistory= loginHistoryRepository.save(loginHistory);
+		user.getLoginHistories().add(loginHistory);
+		userCacheRepository.saveOrUpdate(ModelTransformer.convertToUserDetails(user));
+		return loginHistory;
 	}
 
 }
