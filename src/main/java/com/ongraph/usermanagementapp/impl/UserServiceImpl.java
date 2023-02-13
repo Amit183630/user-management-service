@@ -16,7 +16,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.ongraph.commonserviceapp.cache.UserCacheRepository;
 import com.ongraph.commonserviceapp.context.UserDetailsContextHolder;
 import com.ongraph.commonserviceapp.model.ErrorCodes;
@@ -32,15 +31,16 @@ import com.ongraph.usermanagementapp.entity.User;
 import com.ongraph.usermanagementapp.exception.CustomException;
 import com.ongraph.usermanagementapp.repository.RoleRepository;
 import com.ongraph.usermanagementapp.repository.UserRepository;
+import com.ongraph.usermanagementapp.service.EmailService;
 import com.ongraph.usermanagementapp.service.UserLoginHistoryService;
 import com.ongraph.usermanagementapp.service.UserService;
 import com.ongraph.usermanagementapp.transformer.ModelTransformer;
 import com.ongraph.usermanagementapp.util.Common;
 import com.ongraph.usermanagementapp.util.Time;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+
 
 @Service
 @Slf4j
@@ -74,15 +74,20 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserLoginHistoryService loginHistoryService;
 	
+	@Autowired
+	private EmailService emailService ;
+	
 	
 	@Override
 	@Transactional
 	public UserDetails addUser(SignupRequest signupRequest) {
 		log.debug("addUser()-> signupRequest:{}",signupRequest);
 		validateSignupRequest(signupRequest);
-		return ModelTransformer.convertToUserDetails(
-				userRepository.save(populateUser(signupRequest)));
-	}
+		User user = userRepository.save(populateUser(signupRequest));
+		emailService.emitEmailRegistrationEvent(user);
+		UserDetails userDetails =  ModelTransformer.convertToUserDetails(user);
+		return userDetails ;
+	} 
 	
 	@Override
 	public JwtData loginUser(LoginRequest loginRequest) {
@@ -141,7 +146,7 @@ public class UserServiceImpl implements UserService {
 			
 			return User.builder()
 					.email(request.getEmail())
-					.enabled(true)
+					.enabled(false)
 					.firstName(request.getFirstName())
 					.lastName(request.getLastName())
 					.password(encoder.encode(request.getPassword()))
@@ -176,6 +181,26 @@ public class UserServiceImpl implements UserService {
 		var userDetails=UserDetailsContextHolder.getContext();
 		userCacheRepository.saveOrUpdate(userDetails);
 	}
+
+	
+	@Override
+	public void accountConfirmation(String confirmationToken) {
+		Optional<User> userObject = userRepository.findByConfirmationToken(confirmationToken);
+		User user = new User();
+		if(!userObject.isEmpty()) {
+			  user = userObject.get();
+			  if(user.isEnabled()) {
+				  throw new CustomException(ErrorCodes.E_BAD400,"User already Active");
+			  }
+			  user.setEnabled(true);
+			  userRepository.save(user);
+			  
+		}else {
+			throw new CustomException(ErrorCodes.E_NOTFOUND404,"User Not Found with confirmationtoken" + confirmationToken);
+			}
+		}
+
+	
 	
 	
 	

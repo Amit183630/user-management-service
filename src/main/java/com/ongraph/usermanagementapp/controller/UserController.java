@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ongraph.commonserviceapp.context.UserDetailsContextHolder;
 import com.ongraph.commonserviceapp.model.DataResponse;
+import com.ongraph.commonserviceapp.model.UserDetails;
+import com.ongraph.usermanagementapp.entity.User;
 import com.ongraph.usermanagementapp.service.UserService;
 
 @RestController
@@ -36,4 +38,4 @@ public class UserController {
         				));
     }
     
-}
+  }
