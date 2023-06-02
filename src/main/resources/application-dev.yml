@@ -43,7 +43,7 @@ logging:
   file:
     name: logs/application-%d{yyyy-MM-dd}.log
   level:
-    '[com.ongraph.usermanagementapp]': info
+    '[org.jwick.usermanagementapp]': info
     '[org.springframework.web]': info
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss}- %msg%n"

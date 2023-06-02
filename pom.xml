@@ -5,17 +5,19 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.0.2</version>
+		<version>3.1.0</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.ongraph</groupId>
+	<groupId>org.jwick</groupId>
 	<artifactId>user-management-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>user-management-service</name>
 	<description>User management CRUD operation ,Login and signup</description>
 	<properties>
 		<java.version>17</java.version>
 		<sonar.host.url>http://localhost:9000</sonar.host.url>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -55,12 +57,23 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.jwick</groupId>-->
+<!--			<artifactId>common-service</artifactId>-->
+<!--			<version>1.0</version>-->
+<!--		</dependency>-->
 		<dependency>
-			<groupId>com.ongraph</groupId>
+			<groupId>com.github.Amit183630</groupId>
 			<artifactId>common-service</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0</version>
 		</dependency>
 	</dependencies>
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
 	<build>
 		<plugins>
 			<plugin>
